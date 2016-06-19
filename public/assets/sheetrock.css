@@ -1,7 +1,23 @@
 body {
   font-family: Verdana, Geneva, sans-serif;
+  text-align:center;
 }
+#list{
+  border: 5px solid;
+  margin:45px;
+  padding:30px;
+}
+
 
 #completed{
   text-decoration:line-through;
+  border: 5px solid;
+  margin:45px;
+  padding:30px;
+
+
+}
+
+#completed p{
+  background-color:orange;
 }
