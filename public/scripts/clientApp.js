@@ -4,24 +4,7 @@ var completed= [];
 $(document).ready(function(){
   console.log("the bling works!");
 
-  $(document).on('click', '#subTask', function(){
-    var inItem = $('#taskIn').val();
-    console.log('button clicked! And now we have ' + inItem );
-    var objToSend = {
-      "todo": inItem
-    };
-    $.ajax({
-      type: 'POST',
-      url: '/sendItem',
-      data: objToSend
-    });
-
-    receiveList();
-
-  });
-
 $(document).on('click', '#deleteItem', function(){
-
   var id = $(this).data("id");
 
   if(confirm("Are you sure you want to delete this? This option cannot be undone.")){
@@ -37,42 +20,44 @@ $(document).on('click', '#deleteItem', function(){
             });
             receiveList();
               console.log("We have sent to be deleted ID number: " + id);
-}
-else {
-  console.log('that was not true!');
-}
-});
+            }
+            else {
+              console.log('that was not true!');
+            }
+            });
 
 
 $(document).on('click', '#completeItem', function(){
-  var id = $(this).data("id");
-  var objToSend = {
-    "id": id
-  };
-  $.ajax({
-    type: 'POST',
-    url: '/completeItem',
-    data: objToSend
-  });
+        var id = $(this).data("id");
+        var objToSend = {
+          "id": id
+        };
+        $.ajax({
+          type: 'POST',
+          url: '/completeItem',
+          data: objToSend
+        });
 
-  receiveList();
-  console.log("We have sent to be completed ID number: " + id);
-});
+        console.log("We have sent to be completed ID number: " + id);
+
+        receiveList();
+
+      });
 
 
 $(document).on('click', '#restoreItem', function(){
-  var id = $(this).data("id");
-  var objToSend = {
-    "id": id
-  };
-  $.ajax({
-    type: 'POST',
-    url: '/restoreItem',
-    data: objToSend
-  });
-  receiveList();
-  console.log("We have sent to be completed ID number: " + id);
-  });
+        var id = $(this).data("id");
+        var objToSend = {
+          "id": id
+        };
+        $.ajax({
+          type: 'POST',
+          url: '/restoreItem',
+          data: objToSend
+        });
+        receiveList();
+        console.log("We have sent to be completed ID number: " + id);
+        });
 
 
 var receiveList = function(){
@@ -114,4 +99,46 @@ var receiveList = function(){
         };
       };
       receiveList();
+
+      $(document).on('click', '#subTask', function(){
+        var inItem = $('#taskIn').val();
+        console.log('button clicked! And now we have ' + inItem );
+
+                  var validateText= function(validateThis){
+                    var sendString=function(string){
+                      var objToSend = {
+                        "todo": inItem
+                      };
+                      $.ajax({
+                        type: 'POST',
+                        url: '/sendItem',
+                        data: objToSend
+                      });
+                  receiveList();
+                    };
+                    validateThis = validateThis.toUpperCase();
+                    for (var i=0; i<validateThis.length; i++){
+                      if ('ABCDEFGHIJLKMNOPQRSTUVWXYZ '.indexOf(validateThis.charAt(i)) !==-1){
+                        console.log("we are looking at " + validateThis.charAt(i));
+                        console.log("This string is acceptable");
+                    }
+                        else {
+                        console.log("we are looking at " + validateThis.charAt(i));
+                        console.log("This string is NOT acceptable");
+                        alert("Sorry, you cannot add any special characters in this field.");
+                        $('#taskIn').val('');
+                        return false;
+                    }
+
+                  }
+
+                  sendString(inItem);
+
+                };
+                validateText(inItem);
+                receiveList();
+
+              });
+
+
 });
