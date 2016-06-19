@@ -5,12 +5,18 @@ var urlencodedparser = bodyParser.urlencoded({extended: false});
 var pg = require('pg');
 var path = require('path');
 var connectionString = 'postgres://localhost:5432/toDo';
+var http = require('http');
+app.use(express.static('public'));
+
+http.globalAgent.maxSockets = 100;
+
+
+
 
 app.listen(3000, 'localhost', function(req, res){
   console.log('the server is listening on port 3000');
 });
 
-app.use(express.static('public'));
 
 app.get('/', function(req, res){
   console.log('at base URL');
@@ -18,12 +24,24 @@ app.get('/', function(req, res){
 });
 
 app.post('/sendItem', urlencodedparser, function(req, res){
-  var itemIn = req.body.toDo;
+  var itemIn = req.body.todo;
   pg.connect(connectionString, function(err, client, done){
     client.query("INSERT INTO list (toDo, completed) VALUES ('"+ itemIn + "', false);");
+    done();
   });
   console.log("in sendItem, and we have received: " + itemIn);
+  res.end();
+});
 
+app.post('/deleteItem', urlencodedparser, function(req, res){
+  var deleteThis = req.body.id;
+  console.log("From the delete request, we have received: " + deleteThis);
+
+  pg.connect(connectionString, function(err, client, done){
+    client.query("DELETE FROM list WHERE id=" + deleteThis);
+    done();
+  });
+res.end();
 });
 
 
@@ -42,4 +60,5 @@ app.get('/getList', function(req, res){
       console.log(err);
     } // end error
   }); // end connect
+
 }); //end send results
