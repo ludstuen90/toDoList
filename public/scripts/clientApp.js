@@ -21,19 +21,28 @@ $(document).ready(function(){
   });
 
 $(document).on('click', '#deleteItem', function(){
-  var id = $(this).data("id");
-  var objToSend = {
-    "id": id
-  };
-  $.ajax({
-    type: 'POST',
-    url: '/deleteItem',
-    data: objToSend
-  });
 
-  receiveList();
-  console.log("We have sent to be deleted ID number: " + id);
+  var id = $(this).data("id");
+
+  if(confirm("Are you sure you want to delete this? This option cannot be undone.")){
+    console.log("that was true!");
+
+            var objToSend = {
+              "id": id
+            };
+            $.ajax({
+              type: 'POST',
+              url: '/deleteItem',
+              data: objToSend
+            });
+            receiveList();
+              console.log("We have sent to be deleted ID number: " + id);
+}
+else {
+  console.log('that was not true!');
+}
 });
+
 
 $(document).on('click', '#completeItem', function(){
   var id = $(this).data("id");
@@ -51,8 +60,22 @@ $(document).on('click', '#completeItem', function(){
 });
 
 
-var receiveList = function(){
+$(document).on('click', '#restoreItem', function(){
+  var id = $(this).data("id");
+  var objToSend = {
+    "id": id
+  };
+  $.ajax({
+    type: 'POST',
+    url: '/restoreItem',
+    data: objToSend
+  });
+  receiveList();
+  console.log("We have sent to be completed ID number: " + id);
+  });
 
+
+var receiveList = function(){
       $.ajax({
         type: 'GET',
         url: '/getList',
@@ -60,9 +83,6 @@ var receiveList = function(){
           writeList(data);
           console.log(data);
         }
-
-
-
       });
 
       $.ajax({
@@ -78,24 +98,20 @@ var receiveList = function(){
           console.log("In writeList");
           $('#list').empty();
           for (var i = 0; i < items.length; i++){
-            $('#list').append('<p>Item: '+ items[i].todo + '</p>');
-            $('#list').append('<button data-id="' + items[i].id +'" id="completeItem" name="completeItem">Mark '+ items[i].todo +' as complete!</button>');
+            $('#list').append('<p>'+ items[i].todo + '</p>');
+            $('#list').append('<button data-id="' + items[i].id +'" id="completeItem" name="completeItem">Complete '+ items[i].todo +'</button>');
             $('#list').append('<button data-id="' + items[i].id +'" id="deleteItem" name="deleteItem">Delete '+ items[i].todo +'</button>');
           }
-
         };
         var writeComplete = function(itemsIn){
           console.log("In writeList");
           $('#completed').empty();
           for (var j = 0; j < itemsIn.length; j++){
-            $('#completed').append('<p>Not Active Item: '+ itemsIn[j].todo + '</p>');
-            $('#completed').append('<button data-id="' + itemsIn[j].id +'" id="completeItem" name="completeItem">Mark '+ itemsIn[j].todo +' as complete!</button>');
+            $('#completed').append('<p>'+ itemsIn[j].todo + '</p>');
+            $('#completed').append('<button data-id="' + itemsIn[j].id +'" id="restoreItem" name="completeItem">Oops, mark '+ itemsIn[j].todo +' as incomplete.</button>');
             $('#completed').append('<button data-id="' + itemsIn[j].id +'" id="deleteItem" name="deleteItem">Delete '+ itemsIn[j].todo +'</button>');
           }
-
         };
-
       };
       receiveList();
-
 });

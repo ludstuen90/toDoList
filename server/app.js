@@ -85,3 +85,15 @@ app.get('/getList', function(req, res){
   res.end();
   });
 });
+
+
+app.post('/restoreItem', urlencodedparser, function(req, res){
+  var restoreThis = req.body.id;
+  console.log("From the complete request, we have received: " + restoreThis);
+
+  pg.connect(connectionString, function(err, client, done){
+    client.query("UPDATE list set completed=false WHERE id=" + restoreThis);
+    done();
+  });
+res.end();
+});
