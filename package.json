@@ -4,13 +4,15 @@
   "description": "a list that interacts with a databse to create a persistent list of things to do",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js"
   },
   "author": "@lukasudstuen",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.1",
     "express": "^4.14.0",
-    "jquery": "^3.0.0"
+    "jquery": "^3.0.0",
+    "pg": "^5.1.0"
   }
 }
