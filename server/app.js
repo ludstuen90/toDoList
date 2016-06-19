@@ -86,7 +86,6 @@ app.get('/getList', function(req, res){
   });
 });
 
-
 app.post('/restoreItem', urlencodedparser, function(req, res){
   var restoreThis = req.body.id;
   console.log("From the complete request, we have received: " + restoreThis);

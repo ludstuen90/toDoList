@@ -9,7 +9,6 @@ $(document).on('click', '#deleteItem', function(){
 
   if(confirm("Are you sure you want to delete this? This option cannot be undone.")){
     console.log("that was true!");
-
             var objToSend = {
               "id": id
             };
@@ -55,8 +54,9 @@ $(document).on('click', '#restoreItem', function(){
           url: '/restoreItem',
           data: objToSend
         });
-        receiveList();
         console.log("We have sent to be completed ID number: " + id);
+        receiveList();
+
         });
 
 
@@ -66,7 +66,6 @@ var receiveList = function(){
         url: '/getList',
         success: function(data){
           writeList(data);
-          console.log(data);
         }
       });
 
@@ -75,7 +74,6 @@ var receiveList = function(){
         url: '/getCompleted',
         success: function(data){
           writeComplete(data);
-          console.log(data);
         }
       });
 
@@ -89,7 +87,7 @@ var receiveList = function(){
           }
         };
         var writeComplete = function(itemsIn){
-          console.log("In writeList");
+          console.log("In restoreList");
           $('#completed').empty();
           for (var j = 0; j < itemsIn.length; j++){
             $('#completed').append('<p>'+ itemsIn[j].todo + '</p>');
@@ -117,13 +115,13 @@ var receiveList = function(){
                   receiveList();
                     };
                     validateThis = validateThis.toUpperCase();
-                    for (var i=0; i<validateThis.length; i++){
-                      if ('ABCDEFGHIJLKMNOPQRSTUVWXYZ '.indexOf(validateThis.charAt(i)) !==-1){
-                        console.log("we are looking at " + validateThis.charAt(i));
+                    for (var k=0; k<validateThis.length; k++){
+                      if ('ABCDEFGHIJLKMNOPQRSTUVWXYZ '.indexOf(validateThis.charAt(k)) !==-1){
+                        console.log("we are looking at " + validateThis.charAt(k));
                         console.log("This string is acceptable");
                     }
                         else {
-                        console.log("we are looking at " + validateThis.charAt(i));
+                        console.log("we are looking at " + validateThis.charAt(k));
                         console.log("This string is NOT acceptable");
                         alert("Sorry, you cannot add any special characters in this field.");
                         $('#taskIn').val('');
