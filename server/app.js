@@ -7,16 +7,11 @@ var path = require('path');
 var connectionString = 'postgres://localhost:5432/toDo';
 var http = require('http');
 app.use(express.static('public'));
-
 http.globalAgent.maxSockets = 100;
-
-
-
 
 app.listen(3000, 'localhost', function(req, res){
   console.log('the server is listening on port 3000');
 });
-
 
 app.get('/', function(req, res){
   console.log('at base URL');
@@ -61,4 +56,32 @@ app.get('/getList', function(req, res){
     } // end error
   }); // end connect
 
-}); //end send results
+  app.get('/getCompleted', function(req, res){
+    var results = [];
+    pg.connect(connectionString, function(err, client, done){
+    var query=  client.query("SELECT * FROM list  WHERE completed=true ORDER BY id DESC;");
+      query.on ('row', function(row){
+        results.push(row);
+      });
+      query.on('end', function(){
+        done();
+        return res.json(results);
+      });
+      if(err){
+        console.log(err);
+      } // end error
+    }); // end connect
+  }); //end send results
+
+
+  app.post('/completeItem', urlencodedparser, function(req, res){
+    var completeThis = req.body.id;
+    console.log("From the complete request, we have received: " + completeThis);
+
+    pg.connect(connectionString, function(err, client, done){
+      client.query("UPDATE list set completed=true WHERE id=" + completeThis);
+      done();
+    });
+  res.end();
+  });
+});
